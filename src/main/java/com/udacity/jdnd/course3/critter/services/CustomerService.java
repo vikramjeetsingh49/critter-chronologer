@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CustomerService {
 
     @Autowired
@@ -31,7 +33,7 @@ public class CustomerService {
 
     public Customer saveCustomer(Customer customer, List<Long> petIds) {
         List<Pet> pets = new ArrayList<>();
-        if (ObjectUtils.isEmpty(petIds)) {
+        if (!ObjectUtils.isEmpty(petIds)) {
             pets = petIds.stream().map((petId) -> petRepository.getOne(petId)).collect(Collectors.toList());
         }
         customer.setPets(pets);
